@@ -107,7 +107,7 @@ widgets:
         command: ops/docker/production/bin/build_image
       - category: Production
         name: Push
-        description: Push asia.gcr.io/freenance/cakephp3 image to Registry
+        description: Push asia.gcr.io/template/cakephp3 image to Registry
         command: ops/docker/production/bin/push
       - category: Staging
         name: Kubectl Apply

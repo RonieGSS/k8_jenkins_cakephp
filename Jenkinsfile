@@ -127,7 +127,7 @@ pipeline {
 		    	echo "Production CakePHP3 Image"
 		   		sh("cp $WORKSPACE/ops/docker/production/cakephp/Dockerfile $WORKSPACE")
 		    	script {
-		    		withDockerRegistry(credentialsId: 'gcr:freenance', url: "https://$CLOUD_REGISTRY") {
+		    		withDockerRegistry(credentialsId: 'gcr:template', url: "https://$CLOUD_REGISTRY") {
 		    			// Build and push fluentd images
 		    			def fluentdImage = docker.build("$CLOUD_REGISTRY/fluentd", "./ops/docker/production/fluentd")
 			    		fluentdImage.push()
