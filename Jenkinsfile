@@ -62,7 +62,7 @@ pipeline {
 	stages {
 		stage('SCM') {
 			steps {
-				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'freenance-repo-jenkins-key', url: 'git@github.com:qmu-jp/frnc-frontend.git']]])
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'repo-jenkins-key', url: 'git@github.com:RonieGSS/k8_jenkins_cakephp.git']]])
 			}
 		}
 		stage('Build Original Image') {
