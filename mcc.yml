@@ -1,0 +1,170 @@
+---
+schema_version: v1.1.0
+timezone: Asia/Tokyo
+envs:
+widgets:
+  - id: docker
+    type: menu
+    title: DOCKER
+    content:
+      - category: Docker
+        name: URL
+        description: Show container's urls
+        command: ops/docker/development/bin/url
+      - category: Docker
+        name: Build Containers
+        description: Re-build and up all containers by docker-compose
+        command: ops/docker/development/bin/build
+      - category: Docker
+        name: Start Containers
+        description: Re-start all containers by docker-compose
+        command: ops/docker/development/bin/restart
+      - category: Docker
+        name: Stop
+        description: Stop all containers running on local env
+        command: ops/docker/development/bin/stop
+      - category: Docker
+        name: Logs
+        description: Tail all logs of containers all at once
+        command: ops/docker/development/bin/logs
+      - category: Docker
+        name: SSH CakePHP(Apache) Container
+        description: Execute docker exec to get in the CakePHP container
+        command: ops/docker/development/bin/cakephp/exec bash
+      - category: Docker
+        name: MySQL Console
+        description: Execulte mysql console getting in the MySQL container
+        command: ops/docker/development/bin/mysql/mysql
+        
+  - id: development
+    type: menu
+    title: DEVELOPMENT TOOL
+    content:
+      - category: CakePHP
+        name: Update
+        description: Do all in once Migrations Run, Update ACL, and webpack build
+        command: ops/docker/development/bin/update
+      - category: CakePHP
+        name: Migrations Run
+        description: Execute migrations run
+        command: ops/docker/development/bin/cakephp/exec src/cakephp/bin/migrations_run
+      - category: CakePHP
+        name: Migrations Create
+        description: Execute migrations create (adding a skelton file to define schema changes by yourself)
+        command: ops/docker/development/bin/cakephp/migrations_create
+      - category: CakePHP
+        name: Migrations Generate
+        description: Execute migrations generate (generate the schema diff automatically)
+        command: ops/docker/development/bin/cakephp/migrations_generate
+      - category: CakePHP
+        name: Update ACL
+        description: Updating ACL tables from a definition of src/cakephp/config/config.php
+        command: ops/docker/development/bin/cakephp/exec src/cakephp/bin/update_acl
+      - category: CakePHP
+        name: Read Seed
+        description: Load initial records into db from seed files
+        command: ops/docker/development/bin/cakephp/exec src/cakephp/bin/load_seed
+      - category: CakePHP
+        name: Write Seed
+        description: Create seed file from current db
+        command: ops/docker/development/bin/cakephp/write_seed
+      - category: CakePHP
+        name: Cake Console
+        description: Open cake console
+        command: ops/docker/development/bin/cakephp/cake_prompt
+      - category: CakePHP
+        name: Composer Install
+        description: Execute composer install
+        command: ops/docker/development/bin/cakephp/composer_install
+      - category: CakePHP
+        name: Composer Require
+        description: Execute composer require
+        command: ops/docker/development/bin/cakephp/composer_require
+      - category: webpack
+        name: Build
+        description: Build front end assets by webpack
+        command: ops/docker/bin/webpack/build
+      - category: webpack
+        name: Watch
+        description: Watch file changes of front end assets by webpack
+        command: ops/docker/bin/webpack/watch
+      - category: webpack
+        name: npm install all from package.json
+        description: Excute npm install from package.json
+        command: ops/docker/bin/webpack/npm_install
+      - category: webpack
+        name: npm install --save-dev
+        description: Excute npm install to install packages
+        command: ops/docker/bin/webpack/npm_install_save_dev
+
+  - id: production
+    type: menu
+    title: PRODUCTION TOOL
+    content:
+      - category: Production
+        name: Build Image
+        description: Build cakephp3 production image
+        command: ops/docker/production/bin/build_image
+      - category: Production
+        name: Push
+        description: Push asia.gcr.io/freenance/cakephp3 image to Registry
+        command: ops/docker/production/bin/push
+      - category: Staging
+        name: Kubectl Apply
+        description: Applies https and basic-auth pods
+        command: ops/docker/staging/bin/apply
+      - category: Staging
+        name: Kubectl Delete
+        description: Deletes https and basic-auth pods
+        command: ops/docker/staging/bin/delete
+      - category: Staging
+        name: Migration and Acl Update All
+        description: Migrations and acl
+        command: ops/docker/staging/bin/migrate_and_acl_update
+        
+  - id: analyze
+    type: menu
+    title: ANALYZING TOOL
+    content:
+      - category: Analyze
+        name: PHP CS
+        description: Check coding convention of PSR-2
+        command: ops/docker/bin/php-cs/test
+      - category: Analyze
+        name: PHP MD
+        description: Check code which could be a problem
+        command: ops/docker/bin/php-md/test
+      - category: Analyze
+        name: PHP CPD
+        description: Check deprecated codes
+        command: ops/docker/bin/php-cpd/test
+      - category: Analyze
+        name: PHP CS Fixer
+        description: Beautify code as PSR-2
+        command: ops/docker/bin/php-cs-fixer/fix
+      - category: Docs
+        name: phpDocumentor
+        description: Generate class specifications and class diagram
+        command: ops/docker/bin/php-documentor/generate
+      - category: Docs
+        name: SchemaSpy
+        description: Generate table definitions and ER chart
+        command: ops/docker/development/bin/schemaspy/generate
+
+        
+layout:
+  - name: DASHBOARD
+    rows:
+      - height: 100%
+        cols:
+          - width: 12
+            stacks:
+              - id: docker
+                height: 26% 
+              - id: development
+                height: 33% 
+              - id: analyze 
+                height: 26% 
+              - id: production
+                height: 15% 
+

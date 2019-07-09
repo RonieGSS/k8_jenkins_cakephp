@@ -1,0 +1,25 @@
+#! /bin/sh
+
+cd `dirname $0`/../
+app="cakephp3"
+
+if [[ $(kubectl describe service $app | grep 'green') ]]; 
+then
+	label="${app}-green"
+else
+	label="${app}"
+fi
+
+dir="cakephp"
+httpsName="https-${app}"
+and='@'
+
+IMAGE_NAME=$CLOUD_REGISTRY/${app} PROJECT=$PROJECT \
+APP=${label}-staging NAME=${label} \
+envsubst < "./${dir}/deployment.yaml" | kubectl apply -f -
+
+APP="${label}-staging" DNS=$STAGING_URL NAME="${httpsName}" BASIC=$BASIC AND="${and}" \
+envsubst < "./${dir}/https.yaml" | kubectl apply -f -
+
+LOAD_BALANCER=$STAGING_IP \
+envsubst < "./${dir}/service.yaml" | kubectl apply -f -

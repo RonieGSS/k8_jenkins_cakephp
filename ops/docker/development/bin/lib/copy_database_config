@@ -1,0 +1,24 @@
+#! /bin/sh
+
+# ------------------------
+#
+# 接続情報を作成
+#
+# ------------------------
+
+cd `dirname $0`/../../../../../
+
+debug="true"
+db_host="mysql"
+db_user="root"
+db_pass="1234"
+db_name_debug="debug"
+db_name_test="test"
+
+cp src/cakephp/config/app.default.php src/cakephp/config/app.php
+sed -i -e "s/{{debug}}/$debug/g" src/cakephp/config/app.php
+sed -i -e "s/{{db_host}}/$db_host/g" src/cakephp/config/app.php
+sed -i -e "s/{{db_user}}/$db_user/g" src/cakephp/config/app.php
+sed -i -e "s/{{db_pass}}/$db_pass/g" src/cakephp/config/app.php
+sed -i -e "s/{{db_name_debug}}/$db_name_debug/g" src/cakephp/config/app.php
+sed -i -e "s/{{db_name_test}}/$db_name_test/g" src/cakephp/config/app.php

@@ -1,0 +1,12 @@
+#! /bin/sh
+
+# -----------------------------------------------------
+#
+# Push cakephp3 production image to Container Registry
+#
+# -----------------------------------------------------
+
+cd `dirname $0`/../../../../
+# Build production image
+sh ops/docker/production/bin/build_image
+gcloud docker -- push $CLOUD_REGISTRY/cakephp3

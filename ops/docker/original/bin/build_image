@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# -----------------------------------------
+#
+# Build cakephp3 original image
+#
+# -----------------------------------------
+
+cd `dirname $0`/../
+cd cakephp
+imageName="hxhroniegss/cakephp3"
+dockerBuild="docker build -t $imageName"
+# run docker build command
+$dockerBuild .

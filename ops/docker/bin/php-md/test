@@ -1,0 +1,20 @@
+#! /bin/bash
+
+cd `dirname $0`/../../../../
+root_dir=`pwd`
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+	    Running php static analysis phpmd command...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+
+workdir='/home/php/src'
+
+docker run --rm -v $root_dir:$workdir hxhroniegss/php-static-analysis bash -c "\
+    phpmd \
+        ${workdir}/src/cakephp/config,${workdir}/src/cakephp/src \
+        text ${workdir}/ops/docker/bin/php-md/phpmd-rule.xml --suffixes php,ctp \
+        --exclude ${workdir}/src/cakephp/config/schema,${workdir}/src/cakephp/config/schema/Migrations \
+        --suffixes php,ctp
+"

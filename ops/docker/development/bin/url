@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# docker-compose alias
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../
+projectName=$(basename `pwd` | sed s/-//g)
+host="localhost"
+ip1=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "80/tcp") 0).HostPort}}' $projectName"_cakephp_1")
+ip2=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "80/tcp") 0).HostPort}}' $projectName"_phpmyadmin_1")
+ip3=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "80/tcp") 0).HostPort}}' $projectName"_mailcatcher_1")
+ip4=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "443/tcp") 0).HostPort}}' $projectName"_httpsproxy_1")
+echo ""
+echo ""
+echo "================ YOU CAN SEE ME NOW ================================================"
+echo ""
+echo "サービス本体       (CakePHP)       : http://$host:$ip1"
+echo "サービス本体       (CakePHP SSL)   : https://$host:$ip4"
+echo ""
+echo "---------------- DEVELOPMENT TOOLS -------------------------------------------------"
+echo ""
+echo "DB管理ツール       (phpMyAdmin)    : http://$host:$ip2"
+echo "メールボックス     (MailCatcher)   : http://$host:$ip3"
+echo "開発ドキュメント   (MkDocs)        : http://$host:$ip1/docs/README/"
+echo "クラスリファレンス (phpDocumentor) : http://$host:$ip1/phpdoc/"
+echo "クラス図           (phpDocumentor) : http://$host:$ip1/phpdoc/graphs/class.html"
+echo "テーブル定義書     (SchemaSpy)     : http://$host:$ip1/schemaspy/"
+echo "ER図               (SchemaSpy)     : http://$host:$ip1/schemaspy/relationships.html"
+echo ""
+echo "※ サービス本体のユーザーID/Password"
+echo "　・一般ユーザー　：fuga@fuga.com / fugafuga"
+echo "　・管理者ユーザー：hoge@hoge.com / hogehoge"
+echo ""
+echo "※ phpMyAdminのユーザーID/Password"
+echo "　・root / 1234"
+echo ""
+echo "===================================================================================="

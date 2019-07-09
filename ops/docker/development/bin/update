@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# ------------------------
+#
+# スキーマ変更などを反映する処理をまとめたスクリプト
+#
+# ------------------------
+
+cd `dirname $0`/../../../../
+
+ops/docker/development/bin/cakephp/exec -l src/cakephp/bin/migrations_run
+ops/docker/development/bin/cakephp/exec -l src/cakephp/bin/update_acl
+ops/docker/development/bin/cakephp/exec -l src/cakephp/bin/update_autoload
+ops/docker/development/bin/cakephp/exec -l "cd src/cakephp/; composer install --prefer-dist"
+ops/docker/bin/webpack/build

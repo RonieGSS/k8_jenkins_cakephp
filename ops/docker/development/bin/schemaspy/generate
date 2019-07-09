@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# テーブル定義書 & ER図生成
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+projectName=$(basename `pwd` | sed s/-//g)
+docker run -it --rm -v $(pwd)/src/cakephp/webroot/schemaspy:/home/user/workdir --link $projectName"_mysql_1":mysql tlvu/schemaspy -t mysql -o /home/user/workdir -host mysql -db debug -u root -p 1234 -dp ../pkg/mysql-conn.jar -charset utf-8 -rails

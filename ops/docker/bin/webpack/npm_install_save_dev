@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# Excute npm install --save dev $input
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../
+projectName=$(basename `pwd`)
+projectRoot=$(pwd)
+
+clear >/dev/tty
+echo "Which package? (e.g. jquery jquery-ui): " >/dev/tty
+tput cnorm >/dev/tty 2>/dev/null || tput vs >/dev/tty 2>/dev/null
+read input </dev/tty
+
+docker run --rm \
+    -v $projectRoot:/workspace \
+    qmu1/webpack:latest \
+    /bin/sh -c "
+        cd src/front/
+        npm install --save-dev $input
+    "

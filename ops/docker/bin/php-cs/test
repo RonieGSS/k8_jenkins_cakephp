@@ -1,0 +1,18 @@
+#! /bin/bash
+
+cd `dirname $0`/../../../../
+root_dir=`pwd`
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+	    Running php static analysis php-cs command...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+
+docker run --rm -v $root_dir:/home/php/src  hxhroniegss/php-static-analysis bash -c "\
+    phpcs --standard=ops/docker/bin/php-cs/phpcs.xml --report=checkstyle --report=summary \
+        src/cakephp/src \
+        -d src/cakephp/config \
+        -d src/cakephp/tests \
+        -p
+"

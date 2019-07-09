@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# docker-compose alias
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+
+clear >/dev/tty
+echo "Give Me Args (e.g. test app Model/User): " >/dev/tty
+tput cnorm >/dev/tty 2>/dev/null || tput vs >/dev/tty 2>/dev/null
+read input </dev/tty
+ops/docker/development/bin/cakephp/cake $input

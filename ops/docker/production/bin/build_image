@@ -1,0 +1,49 @@
+#! /bin/sh
+
+# -----------------------------------------
+#
+# Build cakephp3 production image
+#
+# -----------------------------------------
+
+cd `dirname $0`/../../../../
+cp .envrc.prod .envrc
+cp src/cakephp/config/app.prod.php src/cakephp/config/app.php
+direnv allow
+# apply tmp and logs permission
+sudo chmod -R 777 src/cakephp/tmp
+sudo chmod -R 777 src/cakephp/logs
+cd ops/docker/original
+# build original parent image
+sh bin/build_image
+cd ../../../
+# run webpack for production
+sh ops/docker/bin/webpack/npm_install
+sh ops/docker/bin/webpack/build_production
+# build the cakephp3 image
+docker build -t $CLOUD_REGISTRY/cakephp3 \
+			 --build-arg FB_APP_ID=$FB_APP_ID \
+			 --build-arg CAKE_KEY=$CAKE_KEY \
+			 --build-arg FB_APP_SECRET=$FB_APP_SECRET \
+			 --build-arg GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
+			 --build-arg TWITTER_API_KEY=$TWITTER_API_KEY \
+			 --build-arg TWITTER_API_SECRET=$TWITTER_API_SECRET \
+			 --build-arg FREEE_API_KEY=$FREEE_API_KEY \
+			 --build-arg FREEE_API_SECRET=$FREEE_API_SECRET \
+			 --build-arg MFCLOUD_API_KEY=$MFCLOUD_API_KEY \
+			 --build-arg MFCLOUD_API_SECRET=$MFCLOUD_API_SECRET \
+			 --build-arg MISOCA_API_KEY=$MISOCA_API_KEY \
+			 --build-arg MISOCA_API_SECRET=$MISOCA_API_SECRET \
+			 --build-arg MONEYTREE_API_KEY=$MONEYTREE_API_KEY \
+			 --build-arg MONEYTREE_API_SECRET=$MONEYTREE_API_SECRET \
+			 --build-arg TWILIO_SID=$TWILIO_SID \
+			 --build-arg TWILIO_TOKEN=$TWILIO_TOKEN \
+			 --build-arg TWILIO_VOICE_MFA_URL=$TWILIO_VOICE_MFA_URL \
+			 --build-arg SEND_GRID_API_KEY=$SEND_GRID_API_KEY \
+			 --build-arg COMPANY_NUMBER_API_KEY=$COMPANY_NUMBER_API_KEY \
+			 --build-arg BOARD_API_KEY=$BOARD_API_KEY \
+			 --build-arg BOARD_API_SECRET=$BOARD_API_SECRET \
+			 --build-arg URL=$URL \
+			 --build-arg RECAPTCHA_SITE_KEY=$RECAPTCHA_SITE_KEY \
+			 --build-arg RECAPTCHA_SECRET=$RECAPTCHA_SECRET \
+             -f ops/docker/production/cakephp/Dockerfile .

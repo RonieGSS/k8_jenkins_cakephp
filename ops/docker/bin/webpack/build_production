@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# ----------------------------------------
+#
+# production front end assets by webpack
+#
+# ----------------------------------------
+
+cd `dirname $0`/../../../../
+projectName=$(basename `pwd`)
+projectRoot=$(pwd)
+docker run --rm \
+    -e NODE_ENV="production" \
+    -v $projectRoot:/workspace \
+    qmu1/webpack:latest \
+    /bin/sh -c "
+        cd src/front/
+        webpack \\
+         --env.production \\
+         --mode=production \\
+         --optimize-dedupe \\
+         --optimize-occurrence-order \\
+         --optimize-max-chunks 15 \\
+         --optimize-min-chunk-size 10000 \\
+         --optimize-minimize 
+    "

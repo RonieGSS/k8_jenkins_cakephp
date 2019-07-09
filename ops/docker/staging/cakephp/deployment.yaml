@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${NAME}
+  labels:
+    app: ${APP}
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: ${APP}
+  template:
+    metadata:
+      labels:
+        app: ${APP}
+    spec:
+      containers:
+        - name: cakephp3
+          image: ${IMAGE_NAME}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 0.2
+              memory: 200Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          tty: true
+          stdin: true
+          env:
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-staging-db-credentials
+                  key: username
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-staging-db-credentials
+                  key: password
+            - name: DATABASE_URL
+              value: "127.0.0.1"
+            - name: DATABASE_PORT
+              value: "3306"
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-staging-db-credentials
+                  key: key_base
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          resources:
+            limits:
+              cpu: 0.2
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          command: ["/cloud_sql_proxy",
+                    "-instances=${PROJECT}:asia-northeast1:cakephp-staging-instance=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
+      - name: cloudsql
+        emptyDir:
+

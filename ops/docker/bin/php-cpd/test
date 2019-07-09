@@ -1,0 +1,20 @@
+#! /bin/bash
+
+cd `dirname $0`/../../../../
+root_dir=`pwd`
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+	    Running php static analysis phpcpd command...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+
+docker run --rm -v $root_dir/src/cakephp:/home/php/src hxhroniegss/php-static-analysis bash -c " \
+    phpcpd \
+        --exclude schema \
+        --exclude Migrations \
+        --names-exclude app.default.php \
+        --names *.php,*.ctp \
+        config \
+        src
+"

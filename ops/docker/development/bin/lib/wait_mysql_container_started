@@ -1,0 +1,35 @@
+#! /bin/sh
+
+# ------------------------
+#
+# mysqlコンテナのmysqlが起動するまで待つ
+#
+# ------------------------
+
+waitMySqlStarted() {
+    # 監視間隔（単位は秒）
+    SLEEP_TIME=3
+    # 最大監視回数
+    MAX_WAIT_COUNT=6
+    # 現在の監視回数
+    waitCount=0
+    # 最大監視時間（単位は秒）
+    MAX_WAIT_TIME=`expr ${SLEEP_TIME} \* ${MAX_WAIT_COUNT}`
+
+    # mysqlのエラーがERROR 2002でなくなるまで監視する
+    while [ "`bin/mysql/exec mysql | egrep 'ERROR 2002'`" != "" ];
+    do
+        if [ ${waitCount} -eq ${MAX_WAIT_COUNT} ]; then
+            echo "`expr ${SLEEP_TIME} \* ${waitCount}`秒待ちましたがmysqlが起動しませんでした。"
+            return 1
+        fi
+        waitCount=`expr ${waitCount} + 1`
+        sleep ${SLEEP_TIME}
+        echo "--- sleep ${SLEEP_TIME} seconds [`expr ${SLEEP_TIME} \* ${waitCount}` / ${MAX_WAIT_TIME}]"
+    done
+
+    echo "mysqlは正常起動しました。"
+    return 0
+}
+# mysqlコンテナのmysqlが起動するまで待つ
+waitMySqlStarted

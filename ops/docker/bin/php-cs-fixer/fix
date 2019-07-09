@@ -1,0 +1,23 @@
+#! /bin/bash
+
+cd `dirname $0`/../../../../
+root_dir=`pwd`
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+    Running php static analysis php-cs-fixer fix command...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+
+conf="--config=/home/php/src/ops/docker/bin/php-cs-fixer/config.php"
+
+docker run --rm -v $root_dir:/home/php/src hxhroniegss/php-static-analysis bash -c "
+    php-cs-fixer fix $conf src/cakephp/config/Seeds     ; \
+    php-cs-fixer fix $conf src/cakephp/config/Migrations  ; \
+    php-cs-fixer fix $conf src/cakephp/tests            ; \
+    php-cs-fixer fix $conf src/cakephp/src/Controller  ; \
+    php-cs-fixer fix $conf src/cakephp/src/Model       ; \
+    php-cs-fixer fix $conf src/cakephp/src/View ; \
+    php-cs-fixer fix $conf src/cakephp/src/Template        ; \
+    php-cs-fixer fix $conf src/cakephp/src/Shell
+"

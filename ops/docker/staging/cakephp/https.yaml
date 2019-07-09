@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ${NAME}
+  labels:
+    app: ${APP}
+spec:
+  containers:
+    - name: https
+      image: steveltn/https-portal:1
+      resources:
+        limits:
+          cpu: 0.2
+          memory: 200Mi
+        requests:
+          cpu: 50m
+          memory: 100Mi
+      ports:
+        - containerPort: 80
+          protocol: TCP
+        - containerPort: 443
+          protocol: TCP
+      env:
+        - name: DOMAINS
+          value: ${BASIC}${AND}${DNS} -> http://${DNS}
+        - name: STAGE
+          value: production
+

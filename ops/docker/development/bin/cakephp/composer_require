@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# composer require
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+
+clear >/dev/tty
+echo "Which package? (e.g. phpoffice/phpword): " >/dev/tty
+tput cnorm >/dev/tty 2>/dev/null || tput vs >/dev/tty 2>/dev/null
+read input </dev/tty
+
+ops/docker/development/bin/cakephp/exec -l "cd src/cakephp/; composer require $input"

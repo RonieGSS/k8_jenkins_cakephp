@@ -1,0 +1,11 @@
+#! /bin/bash
+
+containerName='hxhronie_mkdocs'
+
+if [[ $(docker ps -f name=$containerName | grep 'mkdocs' -o) ]];
+then
+	# Show container logs
+	docker logs --tail -f $containerName
+else
+	echo "Mkdocs container not running!"
+fi

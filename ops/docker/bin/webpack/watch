@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# Watch file changes of front end assets by webpack
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../
+projectName=$(basename `pwd`)
+projectRoot=$(pwd)
+docker run --rm \
+    -v $projectRoot:/workspace \
+    qmu1/webpack:latest \
+    /bin/sh -c "
+        cd src/front/
+        webpack --watch --colors
+    "
+

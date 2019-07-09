@@ -1,0 +1,19 @@
+#! /bin/sh
+
+# ---------------------------
+#
+# docker-compose alias
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+projectName=$(basename `pwd` | sed s/-//g)
+dockerCompose="docker-compose --file ops/docker/development/docker-compose.yml -p $projectName"
+$dockerCompose stop
+$dockerCompose rm -f
+$dockerCompose pull
+$dockerCompose build --pull
+# 使用されていないイメージ(名前、タグが<none>なもの)を削除
+# http://blog.n-z.jp/blog/2013-12-24-docker-rm.html
+docker rmi $(docker images | awk '/<none>/ { print $3 }')
+$dockerCompose up -d --remove-orphans

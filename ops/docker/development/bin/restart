@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# docker-compose alias
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../
+cp .envrc.dev .envrc
+export HOST_IP=`ipconfig getifaddr en0`
+projectName=$(basename `pwd` | sed s/-//g)
+dockerCompose="docker-compose --file ops/docker/development/docker-compose.yml -p $projectName"
+ops/docker/development/bin/stop
+$dockerCompose up -d --build
+ops/docker/development/bin/url

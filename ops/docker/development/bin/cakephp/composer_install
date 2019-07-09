@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# composer install
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+
+ops/docker/development/bin/cakephp/exec -l "cd src/cakephp/; composer install --prefer-dist"

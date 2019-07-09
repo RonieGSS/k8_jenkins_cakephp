@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# docker-compose alias
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+projectName=$(basename `pwd` | sed s/-//g)
+docker exec -ti $projectName"_cakephp_1" src/cakephp/bin/cake $@

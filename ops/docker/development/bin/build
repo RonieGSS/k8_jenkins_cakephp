@@ -1,0 +1,50 @@
+#! /bin/sh
+
+# ------------------------
+#
+# cakebootを実行可能にするための処理をまとめたスクリプト
+# リポジトリからclone後、このスクリプトの実行のみでひと通り準備ができる
+#
+# ------------------------
+
+cd `dirname $0`/../../../../
+cp .envrc.dev .envrc
+# tmpディレクトリに書き込み権限を付与
+sudo chmod -R 777 src/cakephp/tmp
+sudo chmod -R 777 src/cakephp/logs
+# ops/docker/original
+cd ops/docker/original
+# build original parent image
+sh bin/build_image
+cd ../../../
+# ops/docker/development
+cd ops/docker/development
+# コンテナをビルド
+bin/lib/docker_rebuild
+# 接続情報を作成
+bin/busybox/exec ops/docker/development/bin/lib/copy_database_config
+bin/busybox/exec ops/docker/development/bin/lib/copy_profile
+# mysqlコンテナのmysqlが起動するまで待つ
+bin/lib/wait_mysql_container_started
+# dbを作成する（本来であればコンテナが起動すれば実行されるはずなのだが...）
+bin/mysql/exec "sh docker-entrypoint-initdb.d/init.sh"
+# composer install
+bin/cakephp/exec "src/cakephp/bin/composer_install"
+# migation実行
+bin/cakephp/exec "src/cakephp/bin/migrations_run"
+# acl
+bin/cakephp/exec "src/cakephp/bin/update_acl"
+# seed
+bin/cakephp/cake "migrations seed"
+# npm
+../bin/webpack/npm_install
+# webpack
+../bin/webpack/build
+# SchemaSpy
+bin/schemaspy/generate
+# MkdDcs
+../bin/mkdocs/generate
+# phpDocumentor
+../bin/php-documentor/generate
+# アクセス可能なURLを表示
+bin/url

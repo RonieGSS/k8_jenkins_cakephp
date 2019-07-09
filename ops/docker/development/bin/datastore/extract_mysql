@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# Data Volume ContainerからMysqlのデータをtar.gzで取り出す
+# http://qiita.com/zembutsu/items/373a5df90db2a72d822e
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../../
+projectName=$(basename `pwd` | sed s/-//g)
+docker run --volumes-from $projectName"_datastore_1" -v $(pwd):/backup centos tar czvf /backup/backup.tar.gz /var/lib/mysql

@@ -1,0 +1,46 @@
+#! /bin/bash
+
+cd `dirname $0`/../../../../
+root_dir=`pwd`
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+	Generating phpdoc files in webroot/phpdoc directory ...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+
+result_dir='src/cakephp/webroot/phpdoc'
+
+if [ ! -d $result_dir ];
+then
+	echo "Creating directory ${result_dir} ..."
+	mkdir $result_dir
+fi
+
+docker run --rm -v $root_dir:/home/php/src hxhroniegss/phpdocumentor \
+		run \
+        -t $result_dir \
+        -d src/cakephp/src/Controller \
+        -d src/cakephp/src/Model \
+        -d src/cakephp/src/Shell \
+        -p
+
+container_name='shma_phpdoc'
+if docker ps -q -f name=$container_name &>/dev/null;
+then
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+		Deleting container ${container_name} ...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+	docker stop $container_name
+	docker rm $container_name
+fi
+
+echo "
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+	Running PHPDoc on http://localhost:9908 ...
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+"
+docker run -d -v $root_dir/$result_dir:/var/www/html --name $container_name -p 9908:80 hxhroniegss/php

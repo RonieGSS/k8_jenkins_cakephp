@@ -1,0 +1,21 @@
+#! /bin/sh
+
+cd `dirname $0`/../
+app="cakephp3"
+
+if [[ $(kubectl describe service $app | grep 'green') ]]; 
+then
+	label="${app}-green"
+else
+	label="${app}"
+fi
+
+dir="cakephp"
+httpsName="https-${app}"
+basicAuthName="${app}-basic-auth"
+
+APP="${label}-prod" DNS=$PRODUCTION_URL NAME="${httpsName}" \
+envsubst < "./${dir}/https.yaml" | kubectl delete -f -
+
+APP="${label}-prod" DNS=$PRODUCTION_URL NAME="${basicAuthName}" \
+envsubst < "./${dir}/basic-auth.yaml" | kubectl delete -f -

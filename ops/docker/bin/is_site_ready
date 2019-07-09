@@ -1,0 +1,20 @@
+#! /bin/bash
+
+####################################################
+# isSiteReady Function
+#
+# Determines is site is ready
+#
+# @param string $1 name of the container
+# @param string $2 word that logs show when ready
+####################################################
+isSiteReady() {
+	if docker logs --tail -f $1 2>&1 | grep -w $2 ;
+	then
+		echo "${1} is ready"
+	else
+		echo "${1} is not yet ready..."
+		sleep 3
+		isSiteReady $1 $2
+	fi
+}

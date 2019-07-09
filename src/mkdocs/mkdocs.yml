@@ -1,0 +1,21 @@
+site_name: CakePHP
+copyright: 'copyright © Global Synergy Solutions Inc., All rights reserved.'
+theme:
+  name: 'material'
+  favicon: 'img/favicon.ico'
+  logo: 'img/gss-logo.png'
+  palette:
+    primary: indigo
+    accent: indigo
+pages:
+    - Home: index.md
+    - About: about.md
+    - Project Overview:
+      - Brief Overview: project_overview/overview.md
+    - Coding Conventions:
+      - Front End: coding_conventions/front_end_convention.md
+      - Back End: coding_conventions/back_end_convention.md
+    - Infrastructure:
+      - Chart: infra/chart.md
+      - Use Case: infra/use_case.md
+

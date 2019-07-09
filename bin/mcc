@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# run mcc
+#
+# ---------------------------
+
+cd `dirname $0`/../
+projectPath=$(git rev-parse --show-toplevel) 
+
+if [ "$(uname)" = 'Darwin' ]; then
+    BINARY=darwin_amd64_mcc
+elif [ "$(expr substr $(uname -s) 1 5)" = 'Linux' ]; then
+    BINARY=linux_amd64_mcc
+else
+    echo "Your platform ($(uname -a)) is not supported."
+    exit 1
+fi
+
+source $projectPath/env/env-consts 
+source $projectPath/env/env-vars  
+
+bin/bin/$BINARY mcc.yml

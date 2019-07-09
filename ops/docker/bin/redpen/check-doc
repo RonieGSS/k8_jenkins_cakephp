@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# ---------------------------
+#
+# doc/以下のドキュメンテーションの文書校正を行う
+#
+# ---------------------------
+
+cd `dirname $0`/../../../../
+here=`pwd`
+
+echo "Checking markdown by RedPen..."
+docker run --rm -it -v $here:/data tamurayoshiya/redpen:latest /bin/sh -c "\
+    python /data/ops/redpen/bin/proofread.py
+"
+echo "done"

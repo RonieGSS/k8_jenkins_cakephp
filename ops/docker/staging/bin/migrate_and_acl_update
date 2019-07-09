@@ -1,0 +1,16 @@
+#! /bin/sh
+
+app="cakephp3"
+migration="bin/cake migrations migrate"
+acl="bin/cake update_acl all"
+
+if [[ $(kubectl describe service $app | grep 'green') ]]; 
+then
+	label="${app}-green"
+else
+	label="${app}"
+fi
+
+podName=$(kubectl get pod -l app="${label}-staging" -o jsonpath="{.items[1].metadata.name}")
+echo "Executing migration and acl ..."
+kubectl exec -it $podName --container=cakephp3 -- bash -c "${migration}; ${acl}"

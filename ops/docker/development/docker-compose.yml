@@ -1,0 +1,53 @@
+version: '2'
+services:
+  mysql:
+      image: hxhroniegss/mysql
+      environment:
+          MYSQL_ROOT_PASSWORD: '1234'
+      ports:
+          - '3306:3306'
+      volumes_from:
+          - datastore
+
+  datastore:
+      build: containers/datastore
+
+  cakephp:
+      build: containers/cakephp
+      ports:
+          - '50180:80'
+      env_file: ../../../.envrc
+      environment:
+          PROJECT_NAME: cakephp
+          MYSQL_ROOT_PASSWORD: '1234'
+          DATABASE_URL: mysql2://root:1234@mysql:3306
+          SECRET_KEY_BASE: hogehoge
+      volumes_from:
+          - datastore
+      volumes:
+          - ../../../:/var/www/html
+      links:
+          - mysql
+          - mailcatcher
+
+  mailcatcher:
+      image: hxhroniegss/mailcatcher
+      ports:
+          - '50181:80'
+          - '25'
+
+  phpmyadmin:
+      image: nazarpc/phpmyadmin
+      ports:
+          - '50182:80'
+      links:
+          - mysql
+  httpsproxy:
+      build: containers/https
+      ports:
+          - 50183:443
+      expose:
+          - 443
+      environment:
+          - PORT=50180
+          - HOST_IP=${HOST_IP}
